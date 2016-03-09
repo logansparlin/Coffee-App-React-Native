@@ -1,0 +1,3 @@
+rootProject.name = 'sbx_native'
+
+include ':app'
