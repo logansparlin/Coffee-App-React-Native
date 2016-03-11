@@ -1,8 +1,12 @@
 // import stuff here
+import _ from 'underscore'
 
 export const REQUEST_PRODUCTS = "REQUEST_PRODUCTS"
 export const FETCH_PRODUCTS = "FETCH_PRODUCTS"
 export const RECEIVE_PRODUCTS = "RECEIVE_PRODUCTS"
+export const ADD_TO_CART = "ADD_TO_CART"
+export const REMOVE_FROM_CART = "REMOVE_FROM_CART"
+export const GET_QUANTITY = "GET_QUANTITY"
 
 function requestProducts() {
   return {
@@ -10,10 +14,10 @@ function requestProducts() {
   }
 }
 
-function receiveProducts(json) {
+function receiveProducts(products) {
   return {
     type: RECEIVE_PRODUCTS,
-    items: json,
+    items: products,
     receivedAt: Date.now()
   }
 }
@@ -27,23 +31,34 @@ function fetchProducts() {
       .then((json) => {
         let products = json.allProducts.filter(product => {
           if(product.IsCoffee) {
-            return product
+            return true
+          }
+        }).map(product => {
+          return {
+            id: product.ProductInformation.ProductID,
+            name: product.ProductInformation.Name,
+            SKU: {
+              value: product.SkuInformation[product.SkuInformation.length-1].Value,
+              number: product.SkuInformation[product.SkuInformation.length-1].SKUNumber,
+              UOM: product.SkuInformation[product.SkuInformation.length-1].UOM
+            }
           }
         })
+
         dispatch(receiveProducts(products))
       })
   }
 }
 
 function shouldFetchProducts(state) {
-  const products = state.products.items.length >= 1;
+  let products = state.products.items.length >= 1;
   if (!products) {
     return true
   } else if (products.isFetching) {
     return false
   } else {
     // invalidate and call fetch again here if data is different ??
-    return false
+    return true
   }
 }
 
@@ -52,5 +67,36 @@ export function fetchProductsIfNeeded() {
     if (shouldFetchProducts(getState())) {
       return dispatch(fetchProducts())
     }
+  }
+}
+
+function addToCart(id, quantity) {
+  return {
+    type: ADD_TO_CART,
+    id,
+    quantity
+  }
+}
+
+function removeFromCart(id) {
+  return {
+    type: REMOVE_FROM_CART,
+    id
+  }
+}
+
+export function getQuantity() {
+  return {
+    type: GET_QUANTITY
+  }
+}
+
+export function updateCart(id, quantity) {
+  return (dispatch, getState) => {
+      if(quantity >= 1) {
+        dispatch(addToCart(id, quantity))
+      } else {
+        dispatch(removeFromCart(id))
+      }
   }
 }

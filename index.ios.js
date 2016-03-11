@@ -1,4 +1,4 @@
-import React, { AppRegistry, Component, Navigator, StyleSheet, Text } from 'react-native'
+import React, { AppRegistry, Component, Navigator, StyleSheet, Text, StatusBarIOS } from 'react-native'
 import { Router, Route, Schema, Animations, TabBar } from 'react-native-router-flux'
 import colors from './app/colors'
 import Orders from './app/components/orders'
@@ -22,12 +22,18 @@ class App extends Component {
     return <Text style={styles.NavBarTitle}>{capitalize(this.props.title)}</Text>
   }
 
+  componentDidMount() {
+    StatusBarIOS.setStyle('light-content')
+  }
+
   render() {
-    let loggedIn = false;
+    let loggedIn = true;
+
     return (
       <Provider store={store}>
         <Router
           navigationBarStyle={styles.NavBar}
+          hideNavBar={true}
           titleStyle={styles.NavBarTitle}
           barButtonIconStyle={styles.barButtonIcon}
           barButtonTextStyle={styles.barButtonText}

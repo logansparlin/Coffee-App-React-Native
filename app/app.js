@@ -25,13 +25,11 @@ class Home extends Component {
 
   constructor(props) {
     super(props)
-    // Set status bar to white
-    StatusBarIOS.setStyle('light-content')
-    LayoutAnimation.spring()
+    this._animatedHeight = new Animated.Value(60)
+    this._animatedOpacity = new Animated.Value(0)
     this.state = {
       loginActive: false
     }
-    this._animatedHeight = new Animated.Value(60);
   }
 
   login() {
@@ -39,32 +37,44 @@ class Home extends Component {
   }
 
   openLogin=()=> {
-    let currentHeight = this._animatedHeight._value;
-    Animated.timing( this._animatedHeight, {
-        toValue: (currentHeight == 60) ? height : 60,
-        easing: Easing.bezier(1, 0, 0.45, 1),
-        duration: 400
-    }).start()
-  };
-
-  openLoginModal=()=> {
-    StatusBarIOS.setHidden(true)
-    LayoutAnimation.spring()
+    StatusBarIOS.setHidden(true, 'fade')
     this.setState({
       loginActive: true
-    })
+    });
+    Animated.parallel([
+      Animated.timing( this._animatedOpacity, {
+        toValue: 1,
+        easing: Easing.easeIn,
+        duration: 350
+      }),
+      Animated.timing( this._animatedHeight, {
+          toValue: height,
+          easing: Easing.bezier(1, 0, 0.45, 1),
+          duration: 350
+      })
+    ]).start()
   };
 
-  closeLoginModal=()=> {
-    StatusBarIOS.setHidden(false)
-    LayoutAnimation.spring()
+  closeLogin=()=> {
+    StatusBarIOS.setHidden(false, 'fade')
     this.setState({
       loginActive: false
-    })
+    });
+    Animated.parallel([
+      Animated.timing( this._animatedOpacity, {
+        toValue: 0,
+        easing: Easing.easeIn,
+        duration: 250,
+      }),
+      Animated.timing( this._animatedHeight, {
+          toValue: 60,
+          easing: Easing.bezier(1, 0, 0.45, 1),
+          duration: 350
+      })
+    ]).start()
   };
 
   render() {
-    console.log(this._animatedHeight)
     return (
       <Image source={require('../img/home-bg.jpg')} style={styles.container}>
         <Image style={styles.logo} source={require('../img/sbx_logo.png')} />
@@ -72,10 +82,10 @@ class Home extends Component {
           BRANDED SOLUTIONS
         </Text>
         <Animated.View style={[styles.buttonContainer, {height: this._animatedHeight}]}>
-            <TouchableOpacity style={[styles.buttonContainer, {height: this._animatedHeight}]} onPress={this.openLogin}>
+            <TouchableOpacity activeOpacity={0.9} style={[styles.buttonContainer, {height: this._animatedHeight}]} onPress={this.openLogin}>
               <Text style={styles.login}>LOGIN</Text>
-              <View style={login.modal}>
-                <CloseIcon style={styles.closeIcon}/>
+              <Animated.View style={[login.modal, {opacity: this._animatedOpacity}]}>
+                <CloseIcon style={styles.closeIcon} onPress={this.closeLogin}/>
                 <View>
                   <TextInput
                     style={login.textInput}
@@ -94,7 +104,7 @@ class Home extends Component {
                       LOGIN
                   </Button>
                 </View>
-              </View>
+              </Animated.View>
             </TouchableOpacity>
         </Animated.View>
       </Image>
@@ -117,12 +127,6 @@ const login = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: colors.green
   },
-  active: {
-    top: 0
-  },
-  inactive: {
-    top: height
-  },
   textInput: {
     height: 50,
     width: 250,
@@ -141,7 +145,7 @@ const login = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
     marginTop: 10,
-    backgroundColor: colors.green
+    backgroundColor: colors.darkGrey
   },
   buttonText: {
     color: 'white',

@@ -1,13 +1,20 @@
 import { connect } from 'react-redux'
-import { fetchProductsIfNeeded } from '../actions'
+import { fetchProductsIfNeeded, updateCart, getQuantity } from '../actions'
 import Product from '../components/product'
 import React, {
   View,
   Text,
   Component,
   StyleSheet,
-  ListView
+  ListView,
+  Animated,
+  Image,
+  ScrollView
 } from 'react-native'
+
+// Get screen dimensions
+import Dimensions from 'Dimensions'
+let {width, height} = Dimensions.get('window')
 
 class Products extends Component {
 
@@ -20,8 +27,7 @@ class Products extends Component {
   }
 
   componentDidMount() {
-    let { dispatch } = this.props;
-    dispatch(fetchProductsIfNeeded())
+    this.props.getProducts()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -31,8 +37,16 @@ class Products extends Component {
   }
 
   renderRow(data) {
-    return <Product data={data} />
+    return <Product updateCart={this.props.updateCart} data={data} />
   }
+
+  listHeader=()=> {
+    return (
+      <View style={styles.listHeader}>
+      <Text>{this.props.cart.quantity}</Text>
+      </View>
+    )
+  };
 
   render() {
     let {products} = this.props;
@@ -45,31 +59,66 @@ class Products extends Component {
       )
     }
     return (
-      <ListView
-        dataSource={this.state.dataSource}
-        style={styles.container}
-        initialListSize={10}
-        pageSize={10}
-        renderRow={this.renderRow.bind(this)}>
-          <Text style={styles.text}>Products</Text>
-      </ListView>
+      <View style={{flex: 1}}>
+        <Image style={styles.headerImage} source={require("../../img/espresso_shots.jpg")}>
+        </Image>
+        <ScrollView>
+          <ListView
+            dataSource={this.state.dataSource}
+            style={styles.container}
+            initialListSize={10}
+            pageSize={10}
+            renderHeader={this.listHeader}
+            renderRow={this.renderRow.bind(this)}>
+          </ListView>
+          </ScrollView>
+      </View>
     )
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    updateCart: (id, quantity) => {
+      dispatch(updateCart(id, quantity))
+    },
+    getProducts: () => {
+      dispatch(fetchProductsIfNeeded())
+    },
+    getQuantity: () => {
+      dispatch(getQuantity())
+    }
   }
 }
 
 function mapStateToProps(state) {
   return {
-    products: state.products
+    products: state.products,
+    cart: state.cart
   }
 }
 
-export default connect(mapStateToProps)(Products)
+export default connect(mapStateToProps, mapDispatchToProps)(Products)
 
 
 const styles = StyleSheet.create({
+  listHeader: {
+    backgroundColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: width,
+  },
+  headerImage: {
+    width: width,
+    height: 200,
+    position: 'absolute',
+    top: 0,
+    left: 0
+  },
   container: {
     backgroundColor: '#F6F6F6',
-    marginTop: 64
+    position: 'relative',
+    marginTop: 200
   },
   loading: {
     marginTop: 74,

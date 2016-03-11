@@ -18,6 +18,8 @@ export default class Quantity extends Component {
 
   increment=()=> {
     let {quantity} = this.state;
+    
+    this.props.updateCart(this.props.id, (quantity + 1))
     this.setState({
       quantity: quantity + 1
     })
@@ -26,6 +28,7 @@ export default class Quantity extends Component {
   decrement=()=> {
     let {quantity} = this.state;
     if(quantity >= 1) {
+      this.props.updateCart(this.props.id, (quantity - 1))
       this.setState({
         quantity: quantity - 1
       })
@@ -35,19 +38,21 @@ export default class Quantity extends Component {
   render() {
     return (
       <View style={styles.quantityContainer}>
-        <TouchableOpacity
-          onPress={this.increment}
-          style={styles.quantityPlus}>
-            <Text style={styles.icon}>+</Text>
-        </TouchableOpacity>
         <View style={styles.quantity}>
-          <Text>{this.state.quantity}</Text>
+          <Text style={styles.quantityText}>{this.state.quantity}</Text>
         </View>
-        <TouchableOpacity
-          onPress={this.decrement}
-          style={styles.quantityMinus}>
-            <Text style={styles.icon}>-</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            onPress={this.increment}
+            style={styles.quantityPlus}>
+              <Text style={styles.icon}>+</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={this.decrement}
+            style={styles.quantityMinus}>
+              <Text style={styles.icon}>-</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     )
   }
@@ -57,18 +62,20 @@ const styles = StyleSheet.create({
   quantityContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    flexDirection: 'row',
+    padding: 20
   },
   quantityPlus: {
-    width: 35,
-    height:20,
+    width: 40,
+    height:40,
     backgroundColor: colors.green,
     alignItems: 'center',
     justifyContent: 'center'
   },
   quantityMinus: {
-    width: 35,
-    height:20,
+    width: 40,
+    height:40,
     backgroundColor: colors.darkGrey,
     alignItems: 'center',
     justifyContent: 'center'
@@ -78,12 +85,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   quantity: {
-    paddingTop: 5,
-    paddingBottom: 3,
+    paddingTop: 10,
+    paddingBottom: 8,
     width: 35,
     borderWidth: 1,
+    borderRightWidth: 0,
     borderColor: colors.green,
     alignItems: 'center',
     justifyContent: 'center'
   },
+  quantityText: {
+    fontFamily: "Avenir",
+    fontSize: 14
+  }
 })

@@ -3,7 +3,6 @@ import React, {
   Text,
   Image,
   Component,
-  LayoutAnimation,
   StyleSheet
 } from 'react-native'
 import colors from '../colors'
@@ -21,33 +20,20 @@ export default class Product extends Component {
     }
   }
 
-  add=()=> {
-    let {height} = this.state;
-
-    LayoutAnimation.spring()
-    this.setState({
-      height: (height == 80) ? 0 : 80
-    })
-  };
-
   render() {
-    let { ProductInformation, SkuInformation } = this.props.data;
-    let url = "https://solutions.starbucks.com/img/Products/200/" + ProductInformation.ProductID + ".jpg";
-    let SKU = SkuInformation[SkuInformation.length-1];
+    let product = this.props.data;
+    let url = "https://solutions.starbucks.com/img/Products/200/" + product.id + ".jpg";
     return (
         <View>
         <View style={styles.row}>
           <Image source={{uri: url}} style={styles.productImage} />
           <View style={styles.rightContainer}>
-            <Text style={styles.title}>{ProductInformation.Name}</Text>
-            <Text>SIZE {SKU.Value}</Text>
-            <Text>SKU {SKU.SKUNumber}</Text>
-            <Text>PACK {SKU.UOM}</Text>
+            <Text style={styles.title}>{product.name}</Text>
+            <Text style={styles.infoText}>SIZE {product.SKU.value}</Text>
+            <Text style={styles.infoText}>SKU {product.SKU.number}</Text>
+            <Text style={styles.infoText}>PACK {product.SKU.UOM}</Text>
           </View>
-          <Button onPress={this.add}>Add</Button>
-        </View>
-        <View style={[styles.quantityContainer, {height: this.state.height}]}>
-          <Quantity />
+          <Quantity updateCart={this.props.updateCart} id={product.id}/>
         </View>
       </View>
     )
@@ -84,5 +70,9 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     fontSize: 14,
     letterSpacing: 1
+  },
+  infoText: {
+    fontSize: 10,
+    fontFamily: "Avenir"
   }
 })

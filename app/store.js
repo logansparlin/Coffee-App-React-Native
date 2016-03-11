@@ -3,7 +3,7 @@ import thunk from 'redux-thunk'
 import logger from 'redux-logger'
 import rootReducer from './reducers'
 
-const loggerMiddleware = logger()
+const loggerMiddleware = logger({duration: true})
 
 export default function configureStore(initialState) {
   return createStore(
