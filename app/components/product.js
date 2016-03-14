@@ -33,7 +33,7 @@ export default class Product extends Component {
             <Text style={styles.infoText}>SKU {product.SKU.number}</Text>
             <Text style={styles.infoText}>PACK {product.SKU.UOM}</Text>
           </View>
-          <Quantity updateCart={this.props.updateCart} id={product.id}/>
+          <Quantity value={this.props.quantity} updateCart={this.props.updateCart} id={product.id}/>
         </View>
       </View>
     )

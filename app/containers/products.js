@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import { fetchProductsIfNeeded, updateCart, getQuantity } from '../actions'
 import Product from '../components/product'
+import colors from '../colors'
 import React, {
   View,
   Text,
@@ -21,6 +22,7 @@ class Products extends Component {
   constructor(props) {
     super(props)
     this.ds = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2})
+    this.scrollY = new Animated.Value(0)
     this.state = {
       dataSource: this.ds.cloneWithRows(this.props.products.items)
     }
@@ -37,20 +39,43 @@ class Products extends Component {
   }
 
   renderRow(data) {
-    return <Product updateCart={this.props.updateCart} data={data} />
+    return <Product updateCart={this.props.updateCart} data={data} quantity={(this.props.cart.quantityById[data.id]) || 0} />
   }
-
-  listHeader=()=> {
-    return (
-      <View style={styles.listHeader}>
-      <Text>{this.props.cart.quantity}</Text>
-      </View>
-    )
-  };
 
   render() {
     let {products} = this.props;
     let {items, isFetching} = products;
+
+    let interpolatedScale = this.scrollY.interpolate({
+      inputRange: [0, 120],
+      outputRange: [1.2, 1],
+      extrapolateRight: 'clamp',
+      extrapolateLeft: 'extend'
+    })
+
+    let interpolatedHeight = this.scrollY.interpolate({
+      inputRange: [0, 120],
+      outputRange: [190, 80],
+      extrapolateLeft: 'extend',
+      extrapolateRight: 'clamp'
+    })
+
+    let interpolatedOpacity = this.scrollY.interpolate({
+      inputRange: [0, 140],
+      outputRange: [1, 0],
+      extrapolate: 'clamp'
+    })
+
+    var event = Animated.event([
+      {
+        nativeEvent: {
+          contentOffset: {
+            y: this.scrollY
+          }
+        }
+      }
+    ])
+
     if(isFetching) {
       return (
         <View style={styles.loading}>
@@ -60,18 +85,22 @@ class Products extends Component {
     }
     return (
       <View style={{flex: 1}}>
-        <Image style={styles.headerImage} source={require("../../img/espresso_shots.jpg")}>
-        </Image>
-        <ScrollView>
+        <ScrollView onScroll={event} scrollEventThrottle={16}>
           <ListView
             dataSource={this.state.dataSource}
             style={styles.container}
             initialListSize={10}
             pageSize={10}
-            renderHeader={this.listHeader}
             renderRow={this.renderRow.bind(this)}>
           </ListView>
-          </ScrollView>
+        </ScrollView>
+        <Animated.View style={[styles.imageContainer, {transform: [{scale: interpolatedScale}]}, {height: interpolatedHeight}]}>
+          <Animated.Image style={[styles.headerImage, {opacity: interpolatedOpacity}]} source={require("../../img/espresso_shots.jpg")}>
+            <View style={styles.cartContainer}>
+            </View>
+          </Animated.Image>
+        </Animated.View>
+        <Text style={styles.quantity}>{this.props.cart.quantity}</Text>
       </View>
     )
   }
@@ -102,21 +131,26 @@ export default connect(mapStateToProps, mapDispatchToProps)(Products)
 
 
 const styles = StyleSheet.create({
-  listHeader: {
-    backgroundColor: '#ddd',
-    justifyContent: 'center',
-    alignItems: 'center',
+  imageContainer: {
+    position: 'absolute',
+    overflow: 'hidden',
+    height: 200,
+    opacity: 1,
     width: width,
+    top: 0,
+    left: 0,
+    backgroundColor: colors.green
   },
   headerImage: {
     width: width,
-    height: 200,
+    height: 400,
     position: 'absolute',
-    top: 0,
-    left: 0
+    top: -100,
+    left: 0,
+    opacity: 1
   },
   container: {
-    backgroundColor: '#F6F6F6',
+    backgroundColor: 'white',
     position: 'relative',
     marginTop: 200
   },
@@ -128,5 +162,19 @@ const styles = StyleSheet.create({
     fontSize: 50,
     alignItems: 'center',
     textAlign: 'center'
+  },
+  cartContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 200
+  },
+  quantity: {
+    color: 'white',
+    position: 'absolute',
+    top: 30,
+    left: 20,
+    fontSize: 18,
+    fontFamily: "Avenir"
   }
 })

@@ -51,7 +51,6 @@ function addedIds(state = initialCartState.addedIds, action) {
       }
     case REMOVE_FROM_CART:
       const index = state.indexOf(id)
-      console.log('trying to remove')
       console.log(index)
       return [
         ...state.slice(0, index),
@@ -79,24 +78,24 @@ function quantityById(state = initialCartState.quantityById, action) {
 function getQuantity(state = initialCartState.quantityById, action) {
   const values = _.values(quantityById(state, action))
   if(values.length >= 1) {
+    console.log('is greater than 0')
     return values.reduce((one, two) => {
       return one + two
     })
   } else {
+    console.log('is not greater than 0')
     return 0
   }
 }
 
 function cart(state = initialCartState, action) {
   switch(action.type) {
-    case ADD_TO_CART:
+    default:
       return {
         quantity: getQuantity(state.quantityById, action),
         addedIds: addedIds(state.addedIds, action),
         quantityById: quantityById(state.quantityById, action)
       };
-    default:
-      return state;
   }
 }
 

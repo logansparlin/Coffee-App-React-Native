@@ -11,27 +11,21 @@ export default class Quantity extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      quantity: 0
-    }
   }
 
   increment=()=> {
-    let {quantity} = this.state;
-    
-    this.props.updateCart(this.props.id, (quantity + 1))
-    this.setState({
-      quantity: quantity + 1
-    })
+    let {value} = this.props;
+    let {id, updateCart} = this.props;
+
+    updateCart(id, (value + 1))
   };
 
   decrement=()=> {
-    let {quantity} = this.state;
-    if(quantity >= 1) {
-      this.props.updateCart(this.props.id, (quantity - 1))
-      this.setState({
-        quantity: quantity - 1
-      })
+    let {value} = this.props;
+    let {id, updateCart} = this.props;
+
+    if(value >= 1) {
+      updateCart(id, (value - 1))
     }
   };
 
@@ -39,7 +33,7 @@ export default class Quantity extends Component {
     return (
       <View style={styles.quantityContainer}>
         <View style={styles.quantity}>
-          <Text style={styles.quantityText}>{this.state.quantity}</Text>
+          <Text style={styles.quantityText}>{this.props.value}</Text>
         </View>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
