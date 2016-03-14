@@ -96,8 +96,6 @@ class Products extends Component {
         </ScrollView>
         <Animated.View style={[styles.imageContainer, {transform: [{scale: interpolatedScale}]}, {height: interpolatedHeight}]}>
           <Animated.Image style={[styles.headerImage, {opacity: interpolatedOpacity}]} source={require("../../img/espresso_shots.jpg")}>
-            <View style={styles.cartContainer}>
-            </View>
           </Animated.Image>
         </Animated.View>
         <Text style={styles.quantity}>{this.props.cart.quantity}</Text>
