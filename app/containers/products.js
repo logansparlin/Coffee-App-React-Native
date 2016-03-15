@@ -55,9 +55,9 @@ class Products extends Component {
     })
 
     let interpolatedHeight = this.scrollY.interpolate({
-      inputRange: [0, 120],
-      outputRange: [200, 80],
-      extrapolateLeft: 'extend',
+      inputRange: [-300, 0, 136],
+      outputRange: [350, 200, 64],
+      extrapolateLeft: 'clamp',
       extrapolateRight: 'clamp'
     })
 
@@ -99,8 +99,11 @@ class Products extends Component {
           <Animated.Image style={[styles.headerImage, {opacity: interpolatedOpacity}]} source={require("../../img/espresso_shots.jpg")}>
           </Animated.Image>
         </Animated.View>
-        <BagIcon quantity={this.props.cart.quantity} />
-        <Text style={styles.title}>PRODUCTS</Text>
+        <View style={styles.stickyNav}>
+          <Text style={styles.title}>PRODUCTS</Text>
+          <Image source={require('../../img/search-icon.png')} style={styles.searchIcon}></Image>
+          <BagIcon quantity={this.props.cart.quantity} />
+        </View>
       </View>
     )
   }
@@ -163,12 +166,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: 'center'
   },
+  stickyNav: {
+    position: 'absolute',
+    top: 20,
+    left: 0,
+    width: width,
+    height: 44,
+    justifyContent: 'center',
+    backgroundColor: 'transparent'
+  },
   title: {
     fontFamily: 'Avenir',
-    fontWeight: 'bold',
-    position: 'absolute',
-    top: 35,
-    left: 155,
+    fontWeight: '900',
+    letterSpacing: 1,
+    textAlign: 'center',
     color: 'white'
+  },
+  searchIcon: {
+    position: 'absolute',
+    right: 15,
+    bottom: 12,
+    width: 20,
+    height: 20
   }
 })

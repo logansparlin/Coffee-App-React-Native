@@ -5,7 +5,6 @@ let {width, height} = Dimensions.get('window')
 
 export default class TabIcon extends React.Component {
     render(){
-        console.log(this.props)
         return (
             <View style={[ styles.container, {backgroundColor: this.props.selected ? colors.darkGrey : '#aaa'}]}>
               <Text style={styles.text}>{this.props.title.toUpperCase()}</Text>

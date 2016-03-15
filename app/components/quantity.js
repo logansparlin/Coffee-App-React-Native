@@ -63,19 +63,19 @@ const styles = StyleSheet.create({
   quantityPlus: {
     width: 40,
     height:40,
-    backgroundColor: colors.green,
+    backgroundColor: '#d0d0d0',
     alignItems: 'center',
     justifyContent: 'center'
   },
   quantityMinus: {
     width: 40,
     height:40,
-    backgroundColor: colors.darkGrey,
+    backgroundColor: '#eee',
     alignItems: 'center',
     justifyContent: 'center'
   },
   icon: {
-    color: 'white',
+    color: '#333',
     fontWeight: 'bold',
   },
   quantity: {
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     width: 35,
     borderWidth: 1,
     borderRightWidth: 0,
-    borderColor: colors.green,
+    borderColor: '#ddd',
     alignItems: 'center',
     justifyContent: 'center'
   },

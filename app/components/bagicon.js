@@ -1,4 +1,5 @@
-import React, {View, Text, Component, StyleSheet} from 'react-native'
+import React, {View, Text, Component, StyleSheet, TouchableOpacity} from 'react-native'
+import {Actions} from 'react-native-router-flux'
 import colors from '../colors'
 
 export default class BagIcon extends Component {
@@ -7,12 +8,18 @@ export default class BagIcon extends Component {
     console.log(props)
   }
 
+  openBag() {
+    Actions.bag()
+  }
+
   render() {
     return (
-      <View style={[this.props.style, styles.container]}>
-        <View style={styles.handle}></View>
-        <Text style={styles.quantity}>{this.props.quantity}</Text>
-      </View>
+      <TouchableOpacity
+        onPress={this.openBag}
+        style={[this.props.style, styles.container]}>
+          <View style={styles.handle}></View>
+          <Text style={styles.quantity}>{this.props.quantity}</Text>
+      </TouchableOpacity>
     )
   }
 }
@@ -21,10 +28,10 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     backgroundColor: 'white',
-    width: 25,
-    height: 25,
-    top: 35,
-    left: 25,
+    width: 20,
+    height: 20,
+    bottom: 12,
+    left: 15,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -35,10 +42,10 @@ const styles = StyleSheet.create({
   },
   handle: {
     position: 'absolute',
-    top: -7,
-    left: 3.5,
-    width: 18,
-    height: 20,
+    top: -5,
+    left: 2.5,
+    width: 15,
+    height: 17,
     backgroundColor: 'transparent',
     borderWidth: 2,
     borderColor: '#fff',
