@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import { fetchProductsIfNeeded, updateCart, getQuantity } from '../actions'
 import Product from '../components/product'
+import BagIcon from '../components/bagicon'
 import colors from '../colors'
 import React, {
   View,
@@ -10,11 +11,11 @@ import React, {
   ListView,
   Animated,
   Image,
-  ScrollView
+  ScrollView,
+  Dimensions
 } from 'react-native'
 
 // Get screen dimensions
-import Dimensions from 'Dimensions'
 let {width, height} = Dimensions.get('window')
 
 class Products extends Component {
@@ -47,15 +48,15 @@ class Products extends Component {
     let {items, isFetching} = products;
 
     let interpolatedScale = this.scrollY.interpolate({
-      inputRange: [0, 120],
-      outputRange: [1.2, 1],
+      inputRange: [-height, 0],
+      outputRange: [3, 1],
       extrapolateRight: 'clamp',
       extrapolateLeft: 'extend'
     })
 
     let interpolatedHeight = this.scrollY.interpolate({
       inputRange: [0, 120],
-      outputRange: [190, 80],
+      outputRange: [200, 80],
       extrapolateLeft: 'extend',
       extrapolateRight: 'clamp'
     })
@@ -85,7 +86,7 @@ class Products extends Component {
     }
     return (
       <View style={{flex: 1}}>
-        <ScrollView onScroll={event} scrollEventThrottle={16}>
+        <ScrollView onScroll={event} scrollEventThrottle={8}>
           <ListView
             dataSource={this.state.dataSource}
             style={styles.container}
@@ -98,7 +99,8 @@ class Products extends Component {
           <Animated.Image style={[styles.headerImage, {opacity: interpolatedOpacity}]} source={require("../../img/espresso_shots.jpg")}>
           </Animated.Image>
         </Animated.View>
-        <Text style={styles.quantity}>{this.props.cart.quantity}</Text>
+        <BagIcon quantity={this.props.cart.quantity} />
+        <Text style={styles.title}>PRODUCTS</Text>
       </View>
     )
   }
@@ -161,18 +163,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: 'center'
   },
-  cartContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 200
-  },
-  quantity: {
-    color: 'white',
+  title: {
+    fontFamily: 'Avenir',
+    fontWeight: 'bold',
     position: 'absolute',
-    top: 30,
-    left: 20,
-    fontSize: 18,
-    fontFamily: "Avenir"
+    top: 35,
+    left: 155,
+    color: 'white'
   }
 })

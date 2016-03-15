@@ -1,8 +1,10 @@
-import React, { AppRegistry, Component, Navigator, StyleSheet, Text, StatusBarIOS } from 'react-native'
+import React, { AppRegistry, Component, Navigator, StyleSheet, Text, View, StatusBarIOS } from 'react-native'
 import { Router, Route, Schema, Animations, TabBar } from 'react-native-router-flux'
 import colors from './app/colors'
-import Orders from './app/components/orders'
+import Training from './app/containers/training'
+import Orders from './app/containers/orders'
 import Products from './app/containers/products'
+import TabIcon from './app/components/tabicon'
 import Home from './app/app'
 import { Provider } from 'react-redux'
 import configureStore from './app/store'
@@ -15,15 +17,6 @@ function capitalize(str) {
 }
 
 connect()(Router);
-
-class TabIcon extends React.Component {
-    render(){
-        console.log(this.props)
-        return (
-            <Text style={{color: this.props.selected ? colors.green :'white'}}>{this.props.title}</Text>
-        );
-    }
-}
 
 class App extends Component {
 
@@ -48,18 +41,18 @@ class App extends Component {
           barButtonTextStyle={styles.barButtonText}>
 
             <Schema name="default" sceneConfig={Navigator.SceneConfigs.FloatFromRight}/>
-            <Schema name="tab" type="switch" icon={TabIcon} />
+            <Schema name="tab" type="switch" icon={TabIcon} hideNavBar={true}/>
             <Route name="home" title="Home" hideNavBar={true}>
               <Router>
                 <Route name="login" title="Login" component={Home} />
               </Router>
             </Route>
 
-            <Route name="tabbar" initial={loggedIn}>
-              <Router footer={TabBar} tabBarStyle={styles.tabBar} hideNavBar={true}>
-                <Route name="products" title="Products" component={Products} type="replace" schema="tab" />
-                <Route name="orders" title="Orders" component={Products} type="replace" schema="tab" />
-                <Route name="training" title="Training" component={Products} type="replace" schema="tab" />
+            <Route name="tabbar" initial={loggedIn} type="replace">
+              <Router footer={TabBar} hideNavBar={true}>
+                <Route name="products" title="Products" component={Products} schema="tab"/>
+                <Route name="orders" title="Orders" component={Orders} schema="tab" />
+                <Route name="training" title="Training" component={Training} schema="tab" />
               </Router>
             </Route>
 
@@ -81,9 +74,6 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     fontSize: 16,
     marginTop: 12
-  },
-  tabBar: {
-    backgroundColor: colors.darkGrey
   },
   barButtonIcon: {
     tintColor: colors.darkGreen

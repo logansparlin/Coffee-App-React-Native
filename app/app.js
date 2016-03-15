@@ -33,7 +33,7 @@ class Home extends Component {
   }
 
   login() {
-    Actions.products()
+    Actions.tabbar()
   }
 
   openLogin=()=> {

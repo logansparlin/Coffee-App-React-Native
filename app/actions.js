@@ -52,7 +52,9 @@ function fetchProducts() {
 
 function shouldFetchProducts(state) {
   let products = state.products.items.length >= 1;
-  if (!products) {
+  if (products) {
+    return false
+  } else if (!products) {
     return true
   } else if (products.isFetching) {
     return false
