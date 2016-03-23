@@ -1,6 +1,6 @@
 'use strict';
 import React, {
-  StatusBarIOS,
+  StatusBar,
   Component,
   StyleSheet,
   LayoutAnimation,
@@ -33,11 +33,10 @@ class Home extends Component {
   }
 
   login() {
-    Actions.products()
+    Actions.tabbar()
   }
 
   openLogin=()=> {
-    StatusBarIOS.setHidden(true, 'fade')
     this.setState({
       loginActive: true
     });
@@ -56,7 +55,6 @@ class Home extends Component {
   };
 
   closeLogin=()=> {
-    StatusBarIOS.setHidden(false, 'fade')
     this.setState({
       loginActive: false
     });
@@ -118,7 +116,6 @@ const login = StyleSheet.create({
     opacity: 1,
     width: width,
     height: height,
-    opacity: 0,
     top: 0,
     left: 0,
     borderRadius: 5,

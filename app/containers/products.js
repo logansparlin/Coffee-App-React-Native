@@ -1,19 +1,23 @@
 import { connect } from 'react-redux'
 import { fetchProductsIfNeeded, updateCart, getQuantity } from '../actions'
 import Product from '../components/product'
+import BagIcon from '../components/bagicon'
+import colors from '../colors'
+import ParallaxScroll from '../components/common/ParallaxScroll'
 import React, {
   View,
   Text,
+  StatusBar,
   Component,
   StyleSheet,
   ListView,
   Animated,
   Image,
-  ScrollView
+  ScrollView,
+  Dimensions
 } from 'react-native'
 
 // Get screen dimensions
-import Dimensions from 'Dimensions'
 let {width, height} = Dimensions.get('window')
 
 class Products extends Component {
@@ -37,20 +41,13 @@ class Products extends Component {
   }
 
   renderRow(data) {
-    return <Product updateCart={this.props.updateCart} data={data} />
+    return <Product updateCart={this.props.updateCart} data={data} quantity={(this.props.cart.quantityById[data.id]) || 0} />
   }
-
-  listHeader=()=> {
-    return (
-      <View style={styles.listHeader}>
-      <Text>{this.props.cart.quantity}</Text>
-      </View>
-    )
-  };
 
   render() {
     let {products} = this.props;
     let {items, isFetching} = products;
+
     if(isFetching) {
       return (
         <View style={styles.loading}>
@@ -58,21 +55,34 @@ class Products extends Component {
         </View>
       )
     }
+
+    renderBagIcon=()=> {
+      return (
+        <BagIcon quantity={this.props.cart.quantity} />
+      )
+    }
+
+    renderSearchIcon=()=> {
+      return (
+        <Image source={require('../../img/search-icon.png')} style={styles.searchIcon}></Image>
+      )
+    }
+
     return (
-      <View style={{flex: 1}}>
-        <Image style={styles.headerImage} source={require("../../img/espresso_shots.jpg")}>
-        </Image>
-        <ScrollView>
-          <ListView
-            dataSource={this.state.dataSource}
-            style={styles.container}
-            initialListSize={10}
-            pageSize={10}
-            renderHeader={this.listHeader}
-            renderRow={this.renderRow.bind(this)}>
-          </ListView>
-          </ScrollView>
-      </View>
+      <ParallaxScroll
+        backgroundImage={require("../../img/espresso_shots.jpg")}
+        title="PRODUCTS"
+        renderLeftIcon={renderBagIcon()}
+        renderRightIcon={renderSearchIcon()}
+        quantity={this.props.cart.quantity}>
+        <ListView
+          dataSource={this.state.dataSource}
+          style={styles.container}
+          initialListSize={10}
+          pageSize={10}
+          renderRow={this.renderRow.bind(this)}>
+        </ListView>
+      </ParallaxScroll>
     )
   }
 }
@@ -102,22 +112,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(Products)
 
 
 const styles = StyleSheet.create({
-  listHeader: {
-    backgroundColor: '#ddd',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: width,
-  },
-  headerImage: {
-    width: width,
-    height: 200,
-    position: 'absolute',
-    top: 0,
-    left: 0
-  },
   container: {
-    backgroundColor: '#F6F6F6',
+    backgroundColor: 'white',
     position: 'relative',
+    marginBottom: 50,
     marginTop: 200
   },
   loading: {
@@ -128,5 +126,12 @@ const styles = StyleSheet.create({
     fontSize: 50,
     alignItems: 'center',
     textAlign: 'center'
+  },
+  searchIcon: {
+    position: 'absolute',
+    right: 15,
+    bottom: 12,
+    width: 20,
+    height: 20
   }
 })

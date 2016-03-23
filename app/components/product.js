@@ -24,7 +24,6 @@ export default class Product extends Component {
     let product = this.props.data;
     let url = "https://solutions.starbucks.com/img/Products/200/" + product.id + ".jpg";
     return (
-        <View>
         <View style={styles.row}>
           <Image source={{uri: url}} style={styles.productImage} />
           <View style={styles.rightContainer}>
@@ -35,7 +34,6 @@ export default class Product extends Component {
           </View>
           <Quantity updateCart={this.props.updateCart} id={product.id}/>
         </View>
-      </View>
     )
   }
 }

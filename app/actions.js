@@ -7,6 +7,7 @@ export const RECEIVE_PRODUCTS = "RECEIVE_PRODUCTS"
 export const ADD_TO_CART = "ADD_TO_CART"
 export const REMOVE_FROM_CART = "REMOVE_FROM_CART"
 export const GET_QUANTITY = "GET_QUANTITY"
+export const SEND_INVITE = "SEND_INVITE"
 
 function requestProducts() {
   return {
@@ -88,6 +89,15 @@ function removeFromCart(id) {
 export function getQuantity() {
   return {
     type: GET_QUANTITY
+  }
+}
+
+export function sendInvite(invite) {
+  return {
+    type: SEND_INVITE,
+    invite: Object.assign({}, invite, {
+      dateInvited: Date.now()
+    })
   }
 }
 
