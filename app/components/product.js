@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   addIcon: {
     width: 30,
     height: 30,
-    borderColor: '#a0a0a0',
+    borderColor: '#999',
     borderWidth: 1,
     borderRadius: 20,
     justifyContent: 'center',
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   barOne: {
     width: 14,
     height: 1,
-    backgroundColor: '#a0a0a0',
+    backgroundColor: '#999',
     position:'absolute',
     top: 14,
     left: 7
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   barTwo: {
     width: 1,
     height: 14,
-    backgroundColor: '#a0a0a0',
+    backgroundColor: '#999',
     position: 'absolute',
     left: 13,
     top: 8
@@ -175,17 +175,20 @@ const styles = StyleSheet.create({
   quantity: {
     fontFamily: 'Avenir',
     fontWeight: '700',
-    fontSize: 28
+    fontSize: 28,
+    color: '#333'
   },
   qty: {
     fontFamily: 'Avenir',
     fontWeight: '900',
-    fontSize: 10
+    fontSize: 10,
+    color: '#333'
   },
   edit: {
     textDecorationLine: 'underline',
     fontFamily: 'Avenir',
     fontWeight: '900',
-    fontSize: 12
+    fontSize: 12,
+    color: '#999'
   }
 })
