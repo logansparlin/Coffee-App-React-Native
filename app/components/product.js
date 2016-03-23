@@ -3,6 +3,7 @@ import React, {
   Text,
   Image,
   Component,
+  TouchableOpacity,
   StyleSheet
 } from 'react-native'
 import colors from '../colors'
@@ -18,12 +19,22 @@ export default class Product extends Component {
     this.state = {
       height: 0
     }
+
+    this.toggleQuantity = this.toggleQuantity.bind(this)
+  }
+
+  toggleQuantity() {
+    let height = this.state.height
+    this.setState({
+      height: (height == 60) ? 0 : 60
+    })
   }
 
   render() {
     let product = this.props.data;
     let url = "https://solutions.starbucks.com/img/Products/200/" + product.id + ".jpg";
     return (
+      <View>
         <View style={styles.row}>
           <Image source={{uri: url}} style={styles.productImage} />
           <View style={styles.rightContainer}>
@@ -32,28 +43,28 @@ export default class Product extends Component {
             <Text style={styles.infoText}>SKU {product.SKU.number}</Text>
             <Text style={styles.infoText}>PACK {product.SKU.UOM}</Text>
           </View>
-          <Quantity updateCart={this.props.updateCart} id={product.id}/>
+          <TouchableOpacity onPress={this.toggleQuantity} style={styles.addIcon}>
+            <Text>+</Text>
+          </TouchableOpacity>
         </View>
+        <Quantity height={this.state.height} updateCart={this.props.updateCart} id={product.id}/>
+      </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  quantityContainer: {
-    width: width,
-    height: 0,
-    backgroundColor: '#ddd',
-    flexDirection: 'row',
-    alignItems: 'center',
+  addIcon: {
+    flex: 1,
     justifyContent: 'center',
-    overflow: 'hidden'
+    alignItems: 'center'
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 5,
-    paddingLeft: 10,
+    padding: 10,
+    paddingLeft: 20
   },
   rightContainer: {
     flex: 4,

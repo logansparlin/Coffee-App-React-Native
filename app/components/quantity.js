@@ -3,7 +3,9 @@ import React, {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
+  Animated,
+  Easing
 } from 'react-native'
 import colors from '../colors'
 
@@ -12,13 +14,30 @@ export default class Quantity extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      quantity: 0
+      quantity: 0,
+      height: new Animated.Value(0)
     }
+  }
+
+  toggleQuantity(height) {
+    console.log('being called')
+    Animated.timing(
+      this.state.height,
+      {
+        toValue: height,
+        easing: (height == 60) ? Easing.elastic(1) : Easing.easeInOut,
+        duration: (height == 60) ? 400 : 200
+      }
+    ).start()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.toggleQuantity(nextProps.height)
   }
 
   increment=()=> {
     let {quantity} = this.state;
-    
+
     this.props.updateCart(this.props.id, (quantity + 1))
     this.setState({
       quantity: quantity + 1
@@ -37,65 +56,66 @@ export default class Quantity extends Component {
 
   render() {
     return (
-      <View style={styles.quantityContainer}>
+      <Animated.View style={[styles.quantityContainer, {height: this.state.height}]}>
         <View style={styles.quantity}>
           <Text style={styles.quantityText}>{this.state.quantity}</Text>
         </View>
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            onPress={this.increment}
-            style={styles.quantityPlus}>
-              <Text style={styles.icon}>+</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={this.decrement}
-            style={styles.quantityMinus}>
-              <Text style={styles.icon}>-</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={this.decrement}
+          style={styles.quantityMinus}>
+            <Text style={styles.icon}>-</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={this.increment}
+          style={styles.quantityPlus}>
+            <Text style={styles.icon}>+</Text>
+        </TouchableOpacity>
+      </Animated.View>
     )
   }
 }
 
 const styles = StyleSheet.create({
   quantityContainer: {
-    flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row',
-    padding: 20
+    overflow: 'hidden',
+    flexDirection: 'row'
   },
   quantityPlus: {
-    width: 40,
-    height:40,
+    flex: 1,
+    height: 60,
     backgroundColor: colors.green,
     alignItems: 'center',
     justifyContent: 'center'
   },
   quantityMinus: {
-    width: 40,
-    height:40,
-    backgroundColor: colors.darkGrey,
+    flex: 1,
+    height: 60,
+    backgroundColor: '#ccc',
     alignItems: 'center',
     justifyContent: 'center'
   },
   icon: {
+    fontFamily: 'Avenir',
+    fontSize: 28,
     color: 'white',
     fontWeight: 'bold',
   },
   quantity: {
-    paddingTop: 10,
-    paddingBottom: 8,
-    width: 35,
-    borderWidth: 1,
-    borderRightWidth: 0,
-    borderColor: colors.green,
+    height: 60,
+    flex: 3,
+    backgroundColor: '#eee',
     alignItems: 'center',
     justifyContent: 'center'
   },
   quantityText: {
     fontFamily: "Avenir",
-    fontSize: 14
+    fontSize: 28,
+    color: '#444',
+    fontWeight: '600'
   }
 })

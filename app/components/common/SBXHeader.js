@@ -64,18 +64,18 @@ const styles = StyleSheet.create({
   },
   barOne: {
     position: 'relative',
-    left: 5,
-    width: 12,
-    height: 3,
+    left: 4,
+    width: 10,
+    height: 2,
     backgroundColor: 'white',
     transform: [{rotate: '-30deg'}]
   },
   barTwo: {
     position: 'relative',
-    bottom: 3,
+    bottom: 2,
     right: 4,
-    width: 12,
-    height: 3,
+    width: 10,
+    height: 2,
     backgroundColor: 'white',
     transform: [{rotate: '30deg'}]
   }

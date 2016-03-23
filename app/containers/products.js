@@ -116,7 +116,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     position: 'relative',
     marginBottom: 50,
-    marginTop: 200
+    marginTop: 200,
+    paddingTop: 10,
+    paddingBottom: 10
   },
   loading: {
     marginTop: 74,
