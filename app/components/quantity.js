@@ -26,7 +26,7 @@ export default class Quantity extends Component {
       {
         toValue: height,
         easing: (height == 60) ? Easing.elastic(1) : Easing.easeInOut,
-        duration: (height == 60) ? 400 : 200
+        duration: (height == 60) ? 300 : 150
       }
     ).start()
   }
@@ -39,6 +39,7 @@ export default class Quantity extends Component {
     let {quantity} = this.state;
 
     this.props.updateCart(this.props.id, (quantity + 1))
+    this.props.updateQuantity(quantity + 1)
     this.setState({
       quantity: quantity + 1
     })
@@ -47,6 +48,7 @@ export default class Quantity extends Component {
   decrement=()=> {
     let {quantity} = this.state;
     if(quantity >= 1) {
+      this.props.updateQuantity(quantity - 1)
       this.props.updateCart(this.props.id, (quantity - 1))
       this.setState({
         quantity: quantity - 1
