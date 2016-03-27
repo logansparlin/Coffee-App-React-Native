@@ -27,6 +27,7 @@ class Home extends Component {
     super(props)
     this._animatedHeight = new Animated.Value(60)
     this._animatedOpacity = new Animated.Value(0)
+    this.opacityOut = new Animated.Value(1)
     this.state = {
       loginActive: false
     }
@@ -46,6 +47,11 @@ class Home extends Component {
         easing: Easing.easeIn,
         duration: 350
       }),
+      Animated.timing( this.opacityOut, {
+        toValue: 0,
+        easing: Easing.easeIn,
+        duration: 250
+      }),
       Animated.timing( this._animatedHeight, {
           toValue: height,
           easing: Easing.bezier(1, 0, 0.45, 1),
@@ -64,6 +70,12 @@ class Home extends Component {
         easing: Easing.easeIn,
         duration: 250,
       }),
+      Animated.timing( this.opacityOut, {
+        toValue: 1,
+        easing: Easing.easeIn,
+        duration: 350,
+        delay: 250
+      }),
       Animated.timing( this._animatedHeight, {
           toValue: 60,
           easing: Easing.bezier(1, 0, 0.45, 1),
@@ -74,30 +86,45 @@ class Home extends Component {
 
   render() {
     return (
-      <Image source={require('../img/home-bg.jpg')} style={styles.container}>
-        <Image style={styles.logo} source={require('../img/sbx_logo.png')} />
-        <Text style={styles.welcome}>
-          BRANDED SOLUTIONS
-        </Text>
+      <Image source={require('../img/SBX_HOME.png')} style={styles.container}>
+        <StatusBar barStyle={'light-content'} hidden={this.state.loginActive} animated={true} />
+        <Animated.View style={[styles.logoContainer, {opacity: this.opacityOut}]}>
+          <Image style={styles.logo} source={require('../img/sbx_logo.png')} />
+          <View style={styles.divider} />
+          <Text style={styles.welcome}>
+            Branded Solutions
+          </Text>
+        </Animated.View>
         <Animated.View style={[styles.buttonContainer, {height: this._animatedHeight}]}>
-            <TouchableOpacity activeOpacity={0.9} style={[styles.buttonContainer, {height: this._animatedHeight}]} onPress={this.openLogin}>
-              <Text style={styles.login}>LOGIN</Text>
+            <TouchableOpacity activeOpacity={1} style={[styles.buttonContainer, {height: this._animatedHeight}]} onPress={this.openLogin}>
+              <Animated.Text style={[styles.login, {opacity: this.opacityOut}]}>LOGIN</Animated.Text>
               <Animated.View style={[login.modal, {opacity: this._animatedOpacity}]}>
                 <CloseIcon style={styles.closeIcon} onPress={this.closeLogin}/>
                 <View>
-                  <TextInput
-                    style={login.textInput}
-                    placeholder="email"
-                    placeholderTextColor='white'
-                    keyboardType='email-address' />
-                  <TextInput
-                    style={login.textInput}
-                    placeholder="password"
-                    placeholderTextColor='white'
-                    secureTextEntry={true} />
+                  <View style={login.inputContainer}>
+                    <TextInput
+                      style={login.textInput}
+                      placeholder='Email'
+                      autoCapitalize='none'
+                      autocorrect={false}
+                      returnKeyType='done'
+                      placeholderTextColor='white'
+                      keyboardType='email-address' />
+                  </View>
+                  <View style={login.inputContainer}>
+                    <TextInput
+                      style={login.textInput}
+                      placeholder='Password'
+                      autoCapitalize='none'
+                      autocorrect={false}
+                      returnKeyType='done'
+                      placeholderTextColor='white'
+                      secureTextEntry={true} />
+                  </View>
                   <Button
                     containerStyle={login.button}
                     onPress={this.login}
+                    activeOpacity={0.8}
                     style={login.buttonText}>
                       LOGIN
                   </Button>
@@ -122,30 +149,37 @@ const login = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.green
+    backgroundColor: colors.greenAlpha(0.5)
+  },
+  inputContainer: {
+    borderBottomWidth: 1,
+    borderColor: '#fff',
+    marginTop: 10,
+    marginBottom: 10
   },
   textInput: {
     height: 50,
-    width: 250,
-    marginTop: 10,
-    marginBottom: 10,
+    width: width * 0.75,
     paddingLeft: 15,
     paddingRight: 15,
-    borderRadius: 10,
-    color: 'white',
-    borderWidth: 1,
-    borderColor: 'white'
+    fontFamily: 'Avenir',
+    fontWeight: '600',
+    letterSpacing: 1.5,
+    color: 'white'
   },
   button: {
-    borderRadius: 10,
-    width: 250,
+    width: width * 0.75,
     paddingTop: 15,
     paddingBottom: 15,
-    marginTop: 10,
-    backgroundColor: colors.darkGrey
+    borderRadius: 50,
+    marginTop: 40,
+    backgroundColor: '#fff'
   },
   buttonText: {
-    color: 'white',
+    fontFamily: 'Avenir',
+    fontWeight: '800',
+    letterSpacing: 2,
+    color: colors.greenSecondary,
     backgroundColor: 'transparent'
   }
 })
@@ -153,30 +187,43 @@ const login = StyleSheet.create({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: colors.darkGrey,
     width: width,
-    height: height
+    height: height,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  logoContainer: {
+    top: -50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  divider: {
+    width: 1,
+    height: 60,
+    marginLeft: 5,
+    marginRight: 5,
+    backgroundColor: 'white'
   },
   logo: {
-    width: 100,
-    height: 100
+    width: 75,
+    height: 75,
+    marginRight: 10
   },
   welcome: {
-    fontSize: 22,
+    fontSize: 20,
     textAlign: 'center',
     margin: 10,
     fontFamily: 'Avenir',
     fontWeight: 'bold',
-    letterSpacing: 1.5,
     color: 'white',
     backgroundColor: 'transparent'
   },
   buttonContainer: {
     width: width,
     height: 60,
-    backgroundColor: colors.green,
+    backgroundColor: colors.greenAlpha(0.3),
     position: 'absolute',
     bottom: 0,
     left: 0,

@@ -1,4 +1,7 @@
 import colors from '../colors'
+import moment from 'moment'
+import SBXText from './common/SBXText'
+import TrainingRow from './TrainingRow'
 import React, {
   Component,
   View,
@@ -7,6 +10,8 @@ import React, {
   TouchableOpacity,
   Dimensions,
   ListView,
+  Animated,
+  Easing,
   StyleSheet
 } from 'react-native'
 
@@ -16,21 +21,19 @@ export default class Training extends Component {
 
   constructor(props) {
     super(props)
-    console.log(this.props)
+
     this.ds = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2})
+
     this.state = {
-      dataSource: this.ds.cloneWithRows(this.props.trainees)
+      dataSource: this.ds.cloneWithRows(this.props.trainees),
     }
+
+    this.renderRow = this.renderRow.bind(this)
+
   }
 
   renderRow(trainee, sectionId, rowId) {
-    console.log(rowId)
-    return (
-      <View style={[styles.row, (rowId % 2 !== 0) ? styles.rowEven : {}]}>
-        <Text>{trainee.name}</Text>
-        <Text>{trainee.email}</Text>
-      </View>
-    )
+    return <TrainingRow courses={this.props.courses} trainee={trainee} rowId={rowId} />
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,22 +62,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white'
-  },
-  input: {
-    width: 250,
-    height: 50,
-    backgroundColor: '#eee',
-    margin: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
-    alignSelf: 'center'
-  },
-  row: {
-    width: width,
-    backgroundColor: 'white',
-    padding: 20
-  },
-  rowEven: {
-    backgroundColor: '#eee'
   }
 })

@@ -3,6 +3,7 @@ import { fetchProductsIfNeeded, updateCart, getQuantity } from '../actions'
 import Product from '../components/product'
 import BagIcon from '../components/bagicon'
 import colors from '../colors'
+import SBXText from '../components/common/SBXText'
 import ParallaxScroll from '../components/common/ParallaxScroll'
 import React, {
   View,
@@ -44,17 +45,31 @@ class Products extends Component {
     return <Product updateCart={this.props.updateCart} data={data} quantity={(this.props.cart.quantityById[data.id]) || 0} />
   }
 
-  render() {
-    let {products} = this.props;
-    let {items, isFetching} = products;
+  renderContent=()=> {
+    let {isFetching} = this.props.products;
 
     if(isFetching) {
       return (
-        <View style={styles.loading}>
-          <Text>Loading</Text>
+        <View style={[styles.container, styles.loading]}>
+          <SBXText style={styles.loadingText}>LOADING</SBXText>
         </View>
       )
+    } else {
+      return (
+        <ListView
+          dataSource={this.state.dataSource}
+          style={styles.container}
+          initialListSize={10}
+          pageSize={10}
+          renderRow={this.renderRow.bind(this)}>
+        </ListView>
+      )
     }
+  };
+
+  render() {
+    let {products} = this.props;
+    let {items} = products;
 
     renderBagIcon=()=> {
       return (
@@ -75,13 +90,7 @@ class Products extends Component {
         renderLeftIcon={renderBagIcon()}
         renderRightIcon={renderSearchIcon()}
         quantity={this.props.cart.quantity}>
-        <ListView
-          dataSource={this.state.dataSource}
-          style={styles.container}
-          initialListSize={10}
-          pageSize={10}
-          renderRow={this.renderRow.bind(this)}>
-        </ListView>
+        {this.renderContent()}
       </ParallaxScroll>
     )
   }
@@ -121,11 +130,19 @@ const styles = StyleSheet.create({
     paddingBottom: 10
   },
   loading: {
-    marginTop: 74,
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  loadingText: {
+    fontSize: 14,
+    letterSpacing: 1.5,
+    fontWeight: '800',
+    color: '#333'
   },
   text: {
     fontSize: 50,
+    color: '#333',
+    backgroundColor: 'blue',
     alignItems: 'center',
     textAlign: 'center'
   },

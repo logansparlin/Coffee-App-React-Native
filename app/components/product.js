@@ -26,6 +26,7 @@ export default class Product extends Component {
 
     this.toggleQuantity = this.toggleQuantity.bind(this)
     this.updateQuantity = this.updateQuantity.bind(this)
+    this.renderQuantity = this.renderQuantity.bind(this)
   }
 
   toggleQuantity() {
@@ -52,7 +53,6 @@ export default class Product extends Component {
   }
 
   renderQuantity() {
-    console.log(this.state.rotation._value)
 
     let interpolatedRotation = this.state.rotation.interpolate({
         inputRange: [0, 100],
@@ -66,7 +66,7 @@ export default class Product extends Component {
         <View style={styles.quantityInfo}>
           <Text style={styles.qty}>QTY</Text>
           <Text style={styles.quantity}>{this.state.quantity}</Text>
-          <Text style={styles.edit}>{(this.state.height == 60) ? 'SAVE' : 'EDIT'}</Text>
+          <Text style={styles.edit}>{(this.state.height == 60) ? 'DONE' : 'EDIT'}</Text>
         </View>
       )
     } else {

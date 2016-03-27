@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import { sendInvite } from '../actions'
 import SBXHeader from '../components/common/SBXHeader'
+import Course from './Course'
 import colors from '../colors'
 import React, {
   Component,
@@ -10,6 +11,7 @@ import React, {
   TouchableOpacity,
   Dimensions,
   ListView,
+  ScrollView,
   StyleSheet
 } from 'react-native'
 
@@ -22,7 +24,14 @@ class NewInvite extends Component {
 
     this.fields = {
       name: "Logan Sparlin",
-      email: "lsparlin@marlinco.com"
+      email: "lsparlin@marlinco.com",
+      progress: 0
+    }
+
+    this.ds = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2})
+
+    this.state = {
+      courses: this.ds.cloneWithRows(this.props.courses),
     }
 
     this.updateName = this.updateName.bind(this)
@@ -42,31 +51,40 @@ class NewInvite extends Component {
     this.props.sendInvite(this.fields)
   }
 
+  renderRow(course, sectionId, rowId) {
+    return <Course course={course} id={rowId} />
+  }
+
   render() {
     return (
-      <View style={styles.container}>
+      <View style={{flex: 1}}>
+        <ScrollView contentContainerStyle={styles.container}>
+          <ListView
+            contentContainerStyle={styles.courses}
+            dataSource={this.state.courses}
+            renderRow={this.renderRow} />
+          <TextInput style={styles.input}
+            autoCapitalize='words'
+            autoCorrect={false}
+            placeholder="name"
+            returnKeyType='done'
+            onChange={this.updateName} />
+          <TextInput style={styles.input}
+            clearButtonMode='while-editing'
+            autoCapitalize='none'
+            keyboardType="email-address"
+            autoCorrect={false}
+            placeholder="email"
+            returnKeyType='done'
+            onChange={this.updateEmail} />
+          <TouchableOpacity onPress={this.submit}>
+            <Text>SUBMIT</Text>
+          </TouchableOpacity>
+        </ScrollView>
         <SBXHeader
           title="NEW INVITE"
           closeIcon={true}
           />
-        <Text>Training</Text>
-        <TextInput style={styles.input}
-          autoCapitalize='words'
-          autoCorrect={false}
-          placeholder="name"
-          returnKeyType='done'
-          onChange={this.updateName} />
-        <TextInput style={styles.input}
-          clearButtonMode='while-editing'
-          autoCapitalize='none'
-          keyboardType="email-address"
-          autoCorrect={false}
-          placeholder="email"
-          returnKeyType='done'
-          onChange={this.updateEmail} />
-        <TouchableOpacity onPress={this.submit}>
-          <Text>SUBMIT</Text>
-        </TouchableOpacity>
       </View>
     )
   }
@@ -92,10 +110,15 @@ export default connect(mapStateToProps, mapDispatchToProps)(NewInvite)
 
 const styles = StyleSheet.create({
   container: {
-    height: height,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+  },
+  courses: {
+    marginTop: 64,
+    width: width,
+    flexDirection: 'row',
+    flexWrap: 'wrap'
   },
   input: {
     width: 250,

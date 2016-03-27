@@ -22,10 +22,6 @@ connect()(Router);
 
 export default class SBX extends Component {
 
-  renderTitle(title) {
-    return <Text style={styles.NavBarTitle}>{capitalize(this.props.title)}</Text>
-  }
-
   render() {
     let loggedIn = true;
     Navigator.SceneConfigs.FloatFromBottom.gestures = null // Disable gesture on modals
@@ -47,7 +43,7 @@ export default class SBX extends Component {
               <Router footer={TabBar} hideNavBar={true}>
                 <Route name="products" title="Products" schema="tab" component={Products}/>
                 <Route name="orders" title="Orders" component={Orders} schema="tab" />
-                <Route name="training" title="Training" component={TrainingContainer} schema="tab" />
+                <Route name="training" title="Training" initial={true} component={TrainingContainer} schema="tab" />
               </Router>
             </Route>
         </Router>
@@ -55,24 +51,3 @@ export default class SBX extends Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  NavBar: {
-    backgroundColor: colors.green,
-    borderWidth: 0
-  },
-  NavBarTitle: {
-    color: 'white',
-    fontFamily: 'Avenir',
-    fontWeight: 'bold',
-    letterSpacing: 2,
-    fontSize: 16,
-    marginTop: 12
-  },
-  barButtonIcon: {
-    tintColor: colors.darkGreen
-  },
-  barButtonText: {
-    color: colors.darkGreen
-  }
-})
