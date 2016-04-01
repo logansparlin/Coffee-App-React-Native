@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import Training from '../components/training'
+import { fetchTraineesIfNeeded } from '../actions'
 import React, {
   View,
   Text,
@@ -19,14 +20,20 @@ class TrainingContainer extends Component {
     super(props)
   }
 
+  componentDidMount() {
+    this.props.getCourses()
+  }
+
   newInvite() {
     Actions.newinvite()
   }
 
   renderPlusIcon() {
     return (
-      <TouchableOpacity style={styles.plusIcon} onPress={this.newInvite}>
-        <Text style={styles.plusIconText}>+</Text>
+      <TouchableOpacity style={styles.plusIconContainer} onPress={this.newInvite}>
+          <View style={styles.plusIcon}>
+            <Text style={styles.plusIconText}>+</Text>
+          </View>
       </TouchableOpacity>
     )
   }
@@ -42,7 +49,6 @@ class TrainingContainer extends Component {
       </ParallaxScroll>
     )
   }
-
 }
 
 function mapStateToProps(state) {
@@ -52,22 +58,40 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(TrainingContainer)
+function mapDispatchToProps(dispatch) {
+  return {
+    getCourses: () => {
+      dispatch(fetchTraineesIfNeeded())
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TrainingContainer)
 
 
 const styles = StyleSheet.create({
-  plusIcon: {
+  plusIconContainer: {
     position: 'absolute',
     bottom: 4,
     right: 15,
-    width: 25,
+    width: 50,
+    height: 40,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'flex-end',
+  },
+  plusIcon: {
+    width: 25,
+    height: 25,
+    borderColor: '#fff',
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 15
   },
   plusIconText: {
     fontFamily: 'Avenir',
     fontWeight: '600',
     color: 'white',
-    fontSize: 26
+    fontSize: 24
   }
 })

@@ -43,7 +43,7 @@ export default class SBX extends Component {
               <Router footer={TabBar} hideNavBar={true}>
                 <Route name="products" title="Products" schema="tab" component={Products}/>
                 <Route name="orders" title="Orders" component={Orders} schema="tab" />
-                <Route name="training" title="Training" initial={true} component={TrainingContainer} schema="tab" />
+                <Route name="training" title="Training" component={TrainingContainer} schema="tab" />
               </Router>
             </Route>
         </Router>

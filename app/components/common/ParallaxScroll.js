@@ -61,7 +61,7 @@ export default class ParallaxScroll extends Component {
           animated={true}
           barStyle={this.props.statusBarStyle || 'light-content'}
           />
-        <ScrollView onScroll={event} scrollEventThrottle={8} keyboardShouldPersistTaps={true}>
+        <ScrollView onScroll={event} scrollEventThrottle={8} keyboardShouldPersistTaps={true} keyboardDismissMode="on-drag">
           {this.props.children}
         </ScrollView>
         <Animated.View style={[styles.imageContainer, {transform: [{scale: interpolatedScale}]}, {height: interpolatedHeight}]}>

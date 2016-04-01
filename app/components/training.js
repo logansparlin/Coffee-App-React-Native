@@ -21,6 +21,7 @@ export default class Training extends Component {
 
   constructor(props) {
     super(props)
+    console.log(props)
 
     this.ds = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2})
 
@@ -29,7 +30,6 @@ export default class Training extends Component {
     }
 
     this.renderRow = this.renderRow.bind(this)
-
   }
 
   renderRow(trainee, sectionId, rowId) {
@@ -46,6 +46,7 @@ export default class Training extends Component {
     return (
       <View style={styles.container}>
         <ListView
+          ref="listView"
           dataSource={this.state.dataSource}
           renderRow={this.renderRow}
           />

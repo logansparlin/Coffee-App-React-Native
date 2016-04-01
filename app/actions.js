@@ -7,6 +7,8 @@ export const RECEIVE_PRODUCTS = "RECEIVE_PRODUCTS"
 export const ADD_TO_CART = "ADD_TO_CART"
 export const REMOVE_FROM_CART = "REMOVE_FROM_CART"
 export const GET_QUANTITY = "GET_QUANTITY"
+export const REQUEST_TRAINEES = "REQUEST_TRAINEES"
+export const RECEIVE_TRAINEES = "RECEIVE_TRAINEES"
 export const SEND_INVITE = "SEND_INVITE"
 
 function requestProducts() {
@@ -27,24 +29,22 @@ function receiveProducts(products) {
 function fetchProducts() {
   return (dispatch) => {
     dispatch(requestProducts())
-    return fetch('http://solutions.starbucks.com/Umbraco/Api/ProductApi/GetAllProducts')
+    return fetch('http://qa2.sbx.marln.com/umbraco/api/OrderApi/GetLastCompletedOrder?&accountNumber=1000007')
       .then(req => req.json())
       .then((json) => {
-        let products = json.allProducts.filter(product => {
-          if(product.IsCoffee) {
-            return true
-          }
-        }).map(product => {
+        console.log(json)
+        let products = json.order.OrderItems.map(product => {
           return {
-            id: product.ProductInformation.ProductID,
-            name: product.ProductInformation.Name,
+            id: product.ProductID,
+            name: product.Name,
             SKU: {
-              value: product.SkuInformation[product.SkuInformation.length-1].Value,
-              number: product.SkuInformation[product.SkuInformation.length-1].SKUNumber,
-              UOM: product.SkuInformation[product.SkuInformation.length-1].UOM
+              value: product.Size,
+              number: product.SKUNumber,
+              UOM: product.UOM
             }
           }
         })
+        console.log(products)
 
         dispatch(receiveProducts(products))
       })
@@ -89,6 +89,52 @@ function removeFromCart(id) {
 export function getQuantity() {
   return {
     type: GET_QUANTITY
+  }
+}
+
+function requestTrainees() {
+  return {
+    type: REQUEST_TRAINEES
+  }
+}
+
+function receiveTrainees(trainees) {
+  return {
+    type: RECEIVE_TRAINEES,
+    trainees: trainees,
+    receivedAt: Date.now()
+  }
+}
+
+function fetchTrainees() {
+  return (dispatch) => {
+    dispatch(requestTrainees())
+    return fetch('http://qa2.sbx.marln.com/umbraco/api/invitesApi/GetByAccount?operatorUserId=5665&usersCultureAlias=en-US&accountNumber=1000007')
+      .then(req => req.json())
+      .then((json) => {
+        console.log(json)
+        dispatch(receiveTrainees(json))
+      })
+  }
+}
+
+function shouldFetchTrainees(state) {
+  let products = state.products.items.length >= 1;
+  if (!products) {
+    return true
+  } else if (products.isFetching) {
+    return false
+  } else {
+    // invalidate and call fetch again here if data is different ??
+    return true
+  }
+}
+
+export function fetchTraineesIfNeeded() {
+  return (dispatch, getState) => {
+    if (shouldFetchTrainees(getState())) {
+      return dispatch(fetchTrainees())
+    }
   }
 }
 

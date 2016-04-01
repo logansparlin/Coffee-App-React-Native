@@ -6,7 +6,9 @@ import {
   RECEIVE_PRODUCTS,
   ADD_TO_CART,
   REMOVE_FROM_CART,
-  GET_QUANTITY
+  GET_QUANTITY,
+  REQUEST_COURSES,
+  RECEIVE_COURSES
 } from './actions'
 
 const initialCartState = {

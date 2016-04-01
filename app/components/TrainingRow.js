@@ -30,6 +30,7 @@ export default class TrainingRow extends Component {
   }
 
   toggleHeight() {
+
     Animated.timing(
       this.state.height,
       {
@@ -48,7 +49,7 @@ export default class TrainingRow extends Component {
       if(trainee.progress > 0) {
         return 'active'
       } else {
-        return moment(trainee.dateInvited).format('M/D/YY')
+        return moment(trainee.DateInvited).format('M/D/YY')
       }
     }
 
@@ -57,16 +58,16 @@ export default class TrainingRow extends Component {
         <View style={[styles.row, (rowId % 2 !== 0) ? styles.rowEven : {}]}>
           <View style={styles.infoContainer}>
             <SBXText style={styles.access}>{getAccess()}</SBXText>
-            <SBXText style={styles.name}>{trainee.name}</SBXText>
-            <SBXText style={styles.email}>{trainee.email}</SBXText>
+            <SBXText style={styles.name}>{trainee.TraineeName}</SBXText>
+            <SBXText style={styles.email}>{trainee.TraineeEmail}</SBXText>
           </View>
           <View style={styles.progressContainer}>
             <View style={styles.progressOuter}>
-              <View style={[styles.progressInner, {width: (trainee.progress * 100)}]}></View>
+              <View style={[styles.progressInner, {width: (trainee.PercentComplete * 100)}]}></View>
             </View>
           </View>
           <TouchableOpacity
-            onPress={this.toggleHeight}
+            onPress={this.toggleHeight.bind(this, 'row' + rowId)}
             style={styles.arrowContainer}>
             <View style={[styles.bar, styles.barOne]} />
             <View style={[styles.bar, styles.barTwo]} />
