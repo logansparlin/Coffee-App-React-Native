@@ -1,5 +1,8 @@
 ## SBX Native App
 
+# Install React Native
+- https://facebook.github.io/react-native/docs/getting-started.html
+
 # Running locally
 - Open ios folder in Xcode and run
 
