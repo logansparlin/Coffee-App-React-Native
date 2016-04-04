@@ -10,6 +10,7 @@ export const GET_QUANTITY = "GET_QUANTITY"
 export const REQUEST_TRAINEES = "REQUEST_TRAINEES"
 export const RECEIVE_TRAINEES = "RECEIVE_TRAINEES"
 export const SEND_INVITE = "SEND_INVITE"
+export const PLACE_ORDER = "PLACE_ORDER"
 
 function requestProducts() {
   return {
@@ -17,10 +18,12 @@ function requestProducts() {
   }
 }
 
-function receiveProducts(products) {
+function receiveProducts(res) {
+  console.log(res)
   return {
     type: RECEIVE_PRODUCTS,
-    items: products,
+    items: res.products,
+    account: res.account,
     receivedAt: Date.now()
   }
 }
@@ -32,7 +35,6 @@ function fetchProducts() {
     return fetch('http://qa2.sbx.marln.com/umbraco/api/OrderApi/GetLastCompletedOrder?&accountNumber=1000007')
       .then(req => req.json())
       .then((json) => {
-        console.log(json)
         let products = json.order.OrderItems.map(product => {
           return {
             id: product.ProductID,
@@ -44,9 +46,22 @@ function fetchProducts() {
             }
           }
         })
-        console.log(products)
 
-        dispatch(receiveProducts(products))
+        let account = {
+          address: json.order.ShipToAddress1,
+          city: json.order.ShipToCity,
+          state: json.order.ShipToState,
+          postalCode: json.order.ShipToPostalCode,
+          accountjNumber: json.order.AccountNumber,
+          email: json.order.EmailAddress,
+          phone: json.order.Telephone,
+          name: json.order.CustomerName
+        }
+
+        console.log(products)
+        console.log(account)
+
+        dispatch(receiveProducts({products, account}))
       })
   }
 }
@@ -154,5 +169,12 @@ export function updateCart(id, quantity) {
       } else {
         dispatch(removeFromCart(id))
       }
+  }
+}
+
+export function placeOrder(products) {
+  return {
+    type: PLACE_ORDER,
+    order: products
   }
 }

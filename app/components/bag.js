@@ -1,8 +1,10 @@
+import SBXText from './common/SBXText'
 import React, {
   StyleSheet,
   Dimensions,
   Component,
   ListView,
+  ScrollView,
   Image,
   View,
   Text
@@ -26,18 +28,21 @@ export default class Bag extends Component {
       <View style={styles.row}>
         <Image source={{uri: url}} style={styles.productImage} />
         <View style={styles.rightContainer}>
-          <Text style={styles.title}>{product.name}</Text>
-          <Text style={styles.infoText}>SIZE {product.SKU.value}</Text>
-          <Text style={styles.infoText}>SKU {product.SKU.number}</Text>
-          <Text style={styles.infoText}>PACK {product.SKU.UOM}</Text>
+          <SBXText style={styles.title}>{product.name}</SBXText>
+          <SBXText style={styles.infoText}>SIZE {product.SKU.value}</SBXText>
+          <SBXText style={styles.infoText}>SKU {product.SKU.number}</SBXText>
+          <SBXText style={styles.infoText}>PACK {product.SKU.UOM}</SBXText>
         </View>
-        <Text style={styles.quantityContainer}>{product.quantity}</Text>
+        <View style={styles.quantityContainer}>
+          <SBXText style={styles.quantityLabel}>QTY</SBXText>
+          <SBXText style={styles.quantity}>{product.quantity}</SBXText>
+        </View>
       </View>
     )
   }
 
   render() {
-    let {products} = this.props;
+    let {products, account} = this.props;
 
     if(products.length <= 0) {
       return (
@@ -47,12 +52,20 @@ export default class Bag extends Component {
       )
     }
     return (
-      <ListView
-        dataSource={this.state.products}
-        style={styles.container}
-        initialListSize={10}
-        pageSize={10}
-        renderRow={this.renderRow.bind(this)}/>
+      <View style={{flex: 1}}>
+        <ScrollView style={styles.container}>
+          <View style={styles.accountInfo}>
+            <SBXText style={styles.shipTo}>Ship to:</SBXText>
+            <SBXText style={styles.address}>{account.address}</SBXText>
+            <SBXText style={styles.address}>{`${account.city}, ${account.state} ${account.postalCode}`}</SBXText>
+          </View>
+          <ListView
+            dataSource={this.state.products}
+            initialListSize={10}
+            pageSize={10}
+            renderRow={this.renderRow.bind(this)}/>
+        </ScrollView>
+      </View>
     )
   }
 }
@@ -62,15 +75,25 @@ const styles = StyleSheet.create({
     marginTop: 64,
     marginBottom: 50,
     paddingBottom: 5,
-    paddingTop: 5,
     backgroundColor: 'white'
   },
   quantityContainer: {
     flex: 1,
-    flexDirection: 'row',
+    paddingLeft: 20,
+    paddingRight: 20,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden'
+  },
+  quantityLabel: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#333'
+  },
+  quantity: {
+    fontSize: 28,
+    fontWeight: '600',
+    color: '#333'
   },
   row: {
     flexDirection: 'row',
@@ -96,5 +119,19 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 10,
     fontFamily: "Avenir"
+  },
+  accountInfo: {
+    padding: 20,
+    marginBottom: 5,
+    backgroundColor: '#eee'
+  },
+  shipTo: {
+    fontWeight: '800',
+    fontSize: 16,
+    paddingBottom: 10
+  },
+  address: {
+    fontSize: 14,
+    fontWeight: '600'
   }
 })

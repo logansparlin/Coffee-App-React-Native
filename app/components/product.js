@@ -25,7 +25,6 @@ export default class Product extends Component {
     }
 
     this.toggleQuantity = this.toggleQuantity.bind(this)
-    this.updateQuantity = this.updateQuantity.bind(this)
     this.renderQuantity = this.renderQuantity.bind(this)
   }
 
@@ -46,12 +45,6 @@ export default class Product extends Component {
 
   }
 
-  updateQuantity(quantity) {
-    this.setState({
-      quantity: quantity
-    })
-  }
-
   renderQuantity() {
 
     let interpolatedRotation = this.state.rotation.interpolate({
@@ -61,11 +54,11 @@ export default class Product extends Component {
         duration: 150
     })
 
-    if(this.state.quantity >= 1) {
+    if(this.props.quantity >= 1) {
       return (
         <View style={styles.quantityInfo}>
           <Text style={styles.qty}>QTY</Text>
-          <Text style={styles.quantity}>{this.state.quantity}</Text>
+          <Text style={styles.quantity}>{this.props.quantity}</Text>
           <Text style={styles.edit}>{(this.state.height == 60) ? 'DONE' : 'EDIT'}</Text>
         </View>
       )
@@ -102,7 +95,7 @@ export default class Product extends Component {
         <Quantity
           height={this.state.height}
           updateCart={this.props.updateCart}
-          updateQuantity={this.updateQuantity}
+          quantity={this.props.quantity}
           id={product.id}/>
       </View>
     )

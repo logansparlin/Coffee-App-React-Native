@@ -23,6 +23,7 @@ function products(state = initialState, action) {
         isFetching: false,
         isLoaded: true,
         items: action.items,
+        account: action.account, 
         lastUpdated: action.receivedAt
       })
     default:

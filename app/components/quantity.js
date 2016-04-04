@@ -14,13 +14,11 @@ export default class Quantity extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      quantity: 0,
       height: new Animated.Value(0)
     }
   }
 
-  toggleQuantity(height) {
-    console.log('being called')
+  toggleHeight(height) {
     Animated.timing(
       this.state.height,
       {
@@ -32,27 +30,19 @@ export default class Quantity extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.toggleQuantity(nextProps.height)
+    this.toggleHeight(nextProps.height)
   }
 
   increment=()=> {
-    let {quantity} = this.state;
+    let {quantity} = this.props;
 
     this.props.updateCart(this.props.id, (quantity + 1))
-    this.props.updateQuantity(quantity + 1)
-    this.setState({
-      quantity: quantity + 1
-    })
   };
 
   decrement=()=> {
-    let {quantity} = this.state;
+    let {quantity} = this.props;
     if(quantity >= 1) {
-      this.props.updateQuantity(quantity - 1)
       this.props.updateCart(this.props.id, (quantity - 1))
-      this.setState({
-        quantity: quantity - 1
-      })
     }
   };
 
@@ -60,7 +50,7 @@ export default class Quantity extends Component {
     return (
       <Animated.View style={[styles.quantityContainer, {height: this.state.height}]}>
         <View style={styles.quantity}>
-          <Text style={styles.quantityText}>{this.state.quantity}</Text>
+          <Text style={styles.quantityText}>{this.props.quantity}</Text>
         </View>
         <TouchableOpacity
           activeOpacity={0.9}

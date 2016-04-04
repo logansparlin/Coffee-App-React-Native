@@ -8,6 +8,9 @@ const colors = {
     return 'rgba(36, 85, 87, ' + alpha + ')'
   },
   darkGreen: 'rgb(5, 40, 15)',
+  darkGreenAlpha: function(alpha) {
+    return 'rgba(5, 40, 14, ' + alpha + ')'
+  },
   darkGrey: 'rgb(26, 26, 26)',
   lightTan: 'rgb(204, 184, 140)',
   darkTan: 'rgb(104, 95, 67)'

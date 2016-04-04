@@ -6,9 +6,10 @@ import React, {
   StyleSheet,
   StatusBar,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native'
 import SBXHeader from '../components/common/SBXHeader'
+import GiftedSpinner from 'react-native-gifted-spinner'
 import colors from '../colors'
 import Bag from '../components/bag'
 import {Actions} from 'react-native-router-flux'
@@ -21,6 +22,15 @@ export default class BagContainer extends Component {
 
   constructor(props) {
     super(props)
+    this.state = { processing: false }
+    this.submitOrder = this.submitOrder.bind(this)
+  }
+
+  submitOrder() {
+    this.setState({ processing: true })
+    setTimeout(() => {
+      Actions.ordercomplete()
+    }, 1500)
   }
 
   closeBag() {
@@ -28,27 +38,30 @@ export default class BagContainer extends Component {
   }
 
   render() {
-    let {products, quantity} = this.props
+    let {products, quantity, account} = this.props
     return (
       <View
         style={styles.container}>
-          <SBXHeader
-            title="CHECKOUT"
-            closeIcon={true}
-            />
           <StatusBar
             animated={true}
             barStyle="light-content"
             />
-          <Bag products={products} />
-          <TouchableOpacity onPress={this.closeBag} style={styles.bottomBar}>
-            <View style={[styles.button, styles.edit]}>
+          <Bag account={account} products={products} />
+          <View style={styles.bottomBar}>
+            <TouchableOpacity activeOpacity={0.9} onPress={this.closeBag} style={[styles.button, styles.edit]}>
               <Text style={styles.buttonText}>EDIT</Text>
-            </View>
-            <View style={[styles.button, styles.submit]}>
-              <Text style={styles.buttonText}>SUBMIT ORDER</Text>
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.submitOrder} activeOpacity={0.9} style={[styles.button, styles.submit]}>
+              <Text style={[styles.buttonText, styles.submitText]}>SUBMIT ORDER</Text>
+              <View style={[styles.loader, (this.state.processing) ? {opacity: 1} : {}]}>
+                <GiftedSpinner />
+              </View>
+            </TouchableOpacity>
+          </View>
+          <SBXHeader
+            title="CHECKOUT"
+            closeIcon={true}
+            />
       </View>
     )
   }
@@ -81,7 +94,16 @@ const styles = StyleSheet.create({
   },
   submit: {
     flex: 3,
+    flexDirection: 'row',
     backgroundColor: colors.greenSecondary
+  },
+  submitText: {
+    paddingLeft: 10
+  },
+  loader: {
+    width: 10,
+    paddingLeft: 20,
+    opacity: 0
   },
   buttonText: {
     fontFamily: 'Avenir',
@@ -94,6 +116,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
+    account: state.products.account,
     products: getCartProducts(state),
     quantity: state.cart.quantity
   }

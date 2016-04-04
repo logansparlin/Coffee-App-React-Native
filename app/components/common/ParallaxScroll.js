@@ -59,6 +59,7 @@ export default class ParallaxScroll extends Component {
       <View style={{flex: 1}}>
         <StatusBar
           animated={true}
+          hidden={false}
           barStyle={this.props.statusBarStyle || 'light-content'}
           />
         <ScrollView onScroll={event} scrollEventThrottle={8} keyboardShouldPersistTaps={true} keyboardDismissMode="on-drag">

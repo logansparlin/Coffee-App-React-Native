@@ -1,7 +1,8 @@
 import _ from 'underscore'
 import {
   ADD_TO_CART,
-  REMOVE_FROM_CART
+  REMOVE_FROM_CART,
+  PLACE_ORDER
 } from '../actions'
 
 const initialState = {
@@ -71,6 +72,12 @@ export function getCartProducts(state) {
 
 export default function cart(state = initialState, action) {
   switch(action.type) {
+    case PLACE_ORDER:
+      return {
+        quantity: 0,
+        addedIds: [],
+        quantityById: {}
+      }
     default:
       return {
         quantity: getQuantity(state.quantityById, action),

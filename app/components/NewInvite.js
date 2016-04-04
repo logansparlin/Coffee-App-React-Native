@@ -2,8 +2,10 @@ import { connect } from 'react-redux'
 import { sendInvite } from '../actions'
 import SBXHeader from '../components/common/SBXHeader'
 import SBXText from '../components/common/SBXText'
+import {Actions} from 'react-native-router-flux'
 import Course from './Course'
 import colors from '../colors'
+import GiftedSpinner from 'react-native-gifted-spinner'
 import React, {
   Component,
   View,
@@ -26,14 +28,15 @@ class NewInvite extends Component {
     this.fields = {
       TraineeName: "Logan Sparlin",
       TraineeEmail: "lsparlin@marlinco.com",
-      progress: 0
+      PercentComplete: 0
     }
 
     this.ds = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2})
 
     this.state = {
       courses: this.ds.cloneWithRows(this.props.courses),
-      selectedCourses: []
+      selectedCourses: [],
+      processing: false
     }
 
     this.updateName = this.updateName.bind(this)
@@ -53,11 +56,15 @@ class NewInvite extends Component {
 
   submit() {
     this.props.sendInvite(this.fields)
+    this.setState({ processing: true })
+    setTimeout(() => {
+      Actions.pop()
+    }, 1000)
   }
 
-  toggleCourse(id) {
+  toggleCourse(slug) {
     let {selectedCourses} = this.state;
-    let index = selectedCourses.indexOf(id)
+    let index = selectedCourses.indexOf(slug)
     if(index !== -1) {
       this.setState({
         selectedCourses: [
@@ -69,28 +76,28 @@ class NewInvite extends Component {
       this.setState({
         selectedCourses: [
           ...this.state.selectedCourses,
-          id
+          slug
         ]
       })
     }
+    console.log(this.state.selectedCourses)
   }
 
   renderRow(course, sectionId, rowId) {
-    console.log(this)
-    return <Course toggleCourse={this.toggleCourse} course={course} id={rowId} />
+    return <Course toggleCourse={this.toggleCourse} course={course} selectedCourses={this.state.selectedCourses} id={rowId} />
   }
 
   render() {
-    console.log(this.state.selectedCourses)
     return (
       <View style={{flex: 1}}>
         <ScrollView keyboardShouldPersistTaps={true} contentContainerStyle={styles.container} keyboardDismissMode="on-drag">
           <View style={styles.form}>
             <TextInput style={styles.input}
+              clearButtonMode='while-editing'
               autoCapitalize='words'
               autoCorrect={false}
               placeholder="Trainee Name"
-              placeholderTextColor="#666"
+              placeholderTextColor='#555'
               returnKeyType='done'
               onChange={this.updateName} />
             <TextInput style={styles.input}
@@ -99,7 +106,7 @@ class NewInvite extends Component {
               keyboardType="email-address"
               autoCorrect={false}
               placeholder="Trainee Email"
-              placeholderTextColor="#666"
+              placeholderTextColor='#555'
               returnKeyType='done'
               onChange={this.updateEmail} />
           </View>
@@ -108,8 +115,11 @@ class NewInvite extends Component {
             dataSource={this.state.courses}
             renderRow={this.renderRow} />
         </ScrollView>
-        <TouchableOpacity activeOpacity={0.8} style={styles.submit} onPress={this.submit}>
+        <TouchableOpacity activeOpacity={1} style={styles.submit} onPress={this.submit}>
           <SBXText style={styles.submitText}>SEND INVITE</SBXText>
+          <View style={[styles.loader, (this.state.processing) ? {opacity: 1} : {opacity: 0}]}>
+            <GiftedSpinner />
+          </View>
         </TouchableOpacity>
         <SBXHeader
           title="COURSE BUILDER"
@@ -123,8 +133,7 @@ class NewInvite extends Component {
 
 function mapStateToProps(state) {
   return {
-    courses: state.training.courses,
-    trainees: state.training.trainees
+    courses: state.training.courses
   }
 }
 
@@ -149,22 +158,22 @@ const styles = StyleSheet.create({
   courses: {
     width: width,
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    borderBottomWidth: 1
+    flexWrap: 'wrap'
   },
   form: {
-    flexDirection: 'row',
+    // flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10
+    padding: 10,
+    backgroundColor: '#f0f0f0'
   },
   input: {
-    width: (width / 2) - 15,
+    width: width - 30,
     height: 50,
-    // borderWidth: 1,
-    // borderRadius: 5,
-    borderColor: "white",
-    backgroundColor: "#ddd",
+    borderWidth: 1,
+    borderRadius: 5,
+    // borderColor: "white",
+    borderColor: colors.greenSecondary,
     margin: 5,
     paddingLeft: 10,
     paddingRight: 10,
@@ -178,11 +187,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.greenSecondary,
     width: width,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    flexDirection: 'row'
   },
   submitText: {
     color: 'white',
     fontWeight: '800',
-    letterSpacing: 1
+    letterSpacing: 1,
+    paddingLeft: 10
+  },
+  loader: {
+    width: 10,
+    paddingLeft: 20,
+    opacity: 0
   }
 })

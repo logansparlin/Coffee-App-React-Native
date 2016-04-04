@@ -2,6 +2,7 @@ import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import Training from '../components/training'
 import { fetchTraineesIfNeeded } from '../actions'
+import SBXText from '../components/common/SBXText'
 import React, {
   View,
   Text,
@@ -18,6 +19,8 @@ class TrainingContainer extends Component {
 
   constructor(props) {
     super(props)
+
+    this.renderContent = this.renderContent.bind(this)
   }
 
   componentDidMount() {
@@ -38,6 +41,16 @@ class TrainingContainer extends Component {
     )
   }
 
+  renderContent() {
+    if(!this.props.isLoaded || !this.props.trainees) {
+      return <View style={[styles.container, styles.loading]}>
+               <SBXText style={styles.loadingText}>LOADING</SBXText>
+             </View>
+    } else {
+      return <Training trainees={this.props.trainees}/>
+    }
+  }
+
   render() {
     return (
       <ParallaxScroll
@@ -45,7 +58,7 @@ class TrainingContainer extends Component {
         renderRightIcon={this.renderPlusIcon()}
         backgroundImage={require("../../img/training-bg.jpg")}
         >
-        <Training trainees={this.props.trainees}/>
+        {this.renderContent()}
       </ParallaxScroll>
     )
   }
@@ -54,7 +67,8 @@ class TrainingContainer extends Component {
 function mapStateToProps(state) {
   return {
     courses: state.training.courses,
-    trainees: state.training.trainees
+    trainees: state.training.trainees,
+    isLoaded: state.training.isLoaded
   }
 }
 
@@ -93,5 +107,20 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: 'white',
     fontSize: 24
-  }
+  },
+  container: {
+    marginTop: 200,
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  loading: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  loadingText: {
+    fontSize: 14,
+    letterSpacing: 1.5,
+    fontWeight: '800',
+    color: '#333'
+  },
 })

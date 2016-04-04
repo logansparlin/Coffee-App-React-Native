@@ -18,6 +18,9 @@ import { connect } from 'react-redux'
 import Dimensions from 'Dimensions'
 import colors from './colors'
 import { CloseIcon } from './components/elements'
+import AccountPicker from './components/AccountPicker'
+import SBXText from './components/common/SBXText'
+import GiftedSpinner from 'react-native-gifted-spinner'
 
 let {height, width} = Dimensions.get('window');
 
@@ -29,12 +32,17 @@ class Home extends Component {
     this._animatedOpacity = new Animated.Value(0)
     this.opacityOut = new Animated.Value(1)
     this.state = {
-      loginActive: false
+      loginActive: false,
+      processing: false
     }
+    this.login = this.login.bind(this)
   }
 
   login() {
-    Actions.tabbar()
+    this.setState({ processing: true })
+    setTimeout(() => {
+      Actions.tabbar()
+    }, 1500)
   }
 
   openLogin=()=> {
@@ -101,6 +109,8 @@ class Home extends Component {
               <Animated.View style={[login.modal, {opacity: this._animatedOpacity}]}>
                 <CloseIcon style={styles.closeIcon} onPress={this.closeLogin}/>
                 <View>
+
+                  {/*
                   <View style={login.inputContainer}>
                     <TextInput
                       style={login.textInput}
@@ -121,13 +131,20 @@ class Home extends Component {
                       placeholderTextColor='white'
                       secureTextEntry={true} />
                   </View>
-                  <Button
-                    containerStyle={login.button}
-                    onPress={this.login}
-                    activeOpacity={0.8}
-                    style={login.buttonText}>
-                      LOGIN
-                  </Button>
+                  */}
+                  <AccountPicker />
+                  <View>
+                    <Button
+                      containerStyle={login.button}
+                      onPress={this.login}
+                      activeOpacity={0.8}
+                      style={login.buttonText}>
+                        <SBXText style={login.buttonText}>LOGIN</SBXText>
+                        <View style={[login.loader, (this.state.processing) ? {opacity: 1} : {}]}>
+                          <GiftedSpinner />
+                        </View>
+                    </Button>
+                  </View>
                 </View>
               </Animated.View>
             </TouchableOpacity>
@@ -173,14 +190,22 @@ const login = StyleSheet.create({
     paddingBottom: 15,
     borderRadius: 50,
     marginTop: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#fff'
   },
   buttonText: {
     fontFamily: 'Avenir',
     fontWeight: '800',
     letterSpacing: 2,
+    paddingLeft: 20,
     color: colors.greenSecondary,
     backgroundColor: 'transparent'
+  },
+  loader: {
+    width: 10,
+    paddingLeft: 20,
+    opacity: 0
   }
 })
 

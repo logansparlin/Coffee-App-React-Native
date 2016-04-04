@@ -5,6 +5,7 @@ import TrainingContainer from './app/containers/TrainingContainer'
 import Orders from './app/containers/orders'
 import Products from './app/containers/products'
 import BagContainer from './app/containers/BagContainer'
+import OrderComplete from './app/containers/OrderComplete'
 import NewInvite from './app/components/NewInvite'
 import TabIcon from './app/components/tabicon'
 import Home from './app/app'
@@ -23,7 +24,7 @@ connect()(Router);
 export default class SBX extends Component {
 
   render() {
-    let loggedIn = true;
+    let loggedIn = false;
     Navigator.SceneConfigs.FloatFromBottom.gestures = null // Disable gesture on modals
 
     return (
@@ -38,7 +39,8 @@ export default class SBX extends Component {
               </Router>
             </Route>
             <Route name="newinvite" type="push" component={NewInvite} wrapRouter={true} hideNavBar={true} schema="overlay" />
-            <Route name="bagcontainer" type="push" component={BagContainer} wrapRouter={true} hideNavBar={true} schema="overlay"/>
+            <Route name="bagcontainer" type="push" component={BagContainer} wrapRouter={true} hideNavBar={true} schema="overlay" />
+            <Route name="ordercomplete" type="jump" component={OrderComplete} wrapRouter={true} hideNavBar={true} schema="overlay" />
             <Route name="tabbar" initial={loggedIn} type="replace">
               <Router footer={TabBar} hideNavBar={true}>
                 <Route name="products" title="Products" schema="tab" component={Products}/>

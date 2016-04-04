@@ -74,10 +74,10 @@ export default class TrainingRow extends Component {
           </TouchableOpacity>
         </View>
         <Animated.View style={[styles.buttonContainer, {height: this.state.height}]}>
-          <TouchableOpacity style={[styles.button, styles.delete]}>
+          <TouchableOpacity activeOpacity={0.8} style={[styles.button, styles.delete]}>
             <Text style={{color: 'white'}}>DELETE</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, styles.reInvite]}>
+          <TouchableOpacity activeOpacity={0.8} style={[styles.button, styles.reInvite]}>
             <Text style={{color: 'white'}}>RE-INVITE</Text>
           </TouchableOpacity>
         </Animated.View>
