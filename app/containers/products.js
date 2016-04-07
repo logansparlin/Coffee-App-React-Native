@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 import { fetchProductsIfNeeded, updateCart, getQuantity } from '../actions'
+import {Actions} from 'react-native-router-flux'
 import Product from '../components/product'
 import BagIcon from '../components/bagicon'
 import colors from '../colors'
@@ -15,6 +16,7 @@ import React, {
   Animated,
   Image,
   ScrollView,
+  TouchableOpacity,
   Dimensions
 } from 'react-native'
 
@@ -39,6 +41,12 @@ class Products extends Component {
     this.setState({
       dataSource: this.ds.cloneWithRows(nextProps.products.items)
     })
+  }
+
+  goToBag() {
+    if(this.props.cart.quantity >= 1) {
+      Actions.bagcontainer()
+    }
   }
 
   renderRow(data) {
@@ -91,6 +99,11 @@ class Products extends Component {
         renderRightIcon={renderSearchIcon()}
         quantity={this.props.cart.quantity}>
         {this.renderContent()}
+        <View style={styles.checkoutContainer}>
+          <TouchableOpacity  onPress={this.goToBag.bind(this)} activeOpacity={0.9} style={[styles.checkoutButton, (this.props.cart.quantity >= 1) ? styles.active : {}]}>
+            <Text style={styles.checkoutText}>CHECKOUT</Text>
+          </TouchableOpacity>
+        </View>
       </ParallaxScroll>
     )
   }
@@ -124,7 +137,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     position: 'relative',
-    marginBottom: 50,
     marginTop: 200,
     paddingTop: 10,
     paddingBottom: 10
@@ -152,5 +164,24 @@ const styles = StyleSheet.create({
     bottom: 12,
     width: 20,
     height: 20
+  },
+  checkoutContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 75
+  },
+  checkoutButton: {
+    width: width * 0.75,
+    opacity: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50
+  },
+  active: {
+    opacity: 1,
+    backgroundColor: colors.greenSecondary
+  },
+  checkoutText: {
+    color: 'white'
   }
 })

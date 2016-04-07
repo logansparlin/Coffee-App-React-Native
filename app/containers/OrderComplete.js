@@ -35,7 +35,7 @@ class OrderComplete extends Component {
         <SBXText style={styles.paragraph}>If you have a question about your order status or wish to track your order, please contact Starbucks customer service at 1-800-344-1575, option 2. If you ordered marketing materials, they will be shipped to you separately.</SBXText>
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={this.goToOrders} activeOpacity={0.9} style={styles.button}>
-            <SBXText style={styles.buttonText}>GO BACK</SBXText>
+            <SBXText style={styles.buttonText}>OKAY</SBXText>
           </TouchableOpacity>
         </View>
       </View>

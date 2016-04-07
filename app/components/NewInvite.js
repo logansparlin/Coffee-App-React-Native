@@ -110,6 +110,9 @@ class NewInvite extends Component {
               returnKeyType='done'
               onChange={this.updateEmail} />
           </View>
+          <View>
+            <SBXText style={styles.header}>Select Core Curriculum</SBXText>
+          </View>
           <ListView
             contentContainerStyle={styles.courses}
             dataSource={this.state.courses}
@@ -159,6 +162,11 @@ const styles = StyleSheet.create({
     width: width,
     flexDirection: 'row',
     flexWrap: 'wrap'
+  },
+  header: {
+    padding: 20,
+    fontWeight: '800',
+    fontSize: 16,
   },
   form: {
     // flexDirection: 'row',
