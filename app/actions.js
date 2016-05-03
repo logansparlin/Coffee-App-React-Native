@@ -32,7 +32,7 @@ function receiveProducts(res) {
 function fetchProducts() {
   return (dispatch) => {
     dispatch(requestProducts())
-    return fetch('http://qa2.sbx.marln.com/umbraco/api/OrderApi/GetLastCompletedOrder?&accountNumber=1000007')
+    return fetch('http://hotfix.sbx.marln.com/umbraco/api/OrderApi/GetLastCompletedOrder?&accountNumber=1000007')
       .then(req => req.json())
       .then((json) => {
         let products = json.order.OrderItems.map(product => {
@@ -124,7 +124,7 @@ function receiveTrainees(trainees) {
 function fetchTrainees() {
   return (dispatch) => {
     dispatch(requestTrainees())
-    return fetch('http://qa2.sbx.marln.com/umbraco/api/invitesApi/GetByAccount?operatorUserId=5665&usersCultureAlias=en-US&accountNumber=1000007')
+    return fetch('http://hotfix.sbx.marln.com/umbraco/api/invitesApi/GetByAccount?operatorUserId=5665&usersCultureAlias=en-US&accountNumber=1000007')
       .then(req => req.json())
       .then((json) => {
         console.log(json)
